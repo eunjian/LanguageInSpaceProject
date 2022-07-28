@@ -62,10 +62,11 @@ rmse.idw <- sqrt(mean((pad_test$r - pad.idw$var1.pred)^2))
 rmse.krige <- sqrt(mean((pad_test$r - pad.krige$var1.pred)^2))
 rmse.gam <- sqrt(mean((pad_test$r - pad.gam$Z)^2))
 # compare the RMSE values of each model
-sort(c(rmse.gam, rmse.idw, rmse.krige)) # rmse.gam < rmse.krige < rmse.idw
+sort(c(rmse.gam, rmse.idw, rmse.krige)) 
+
 
 ###
-# Conclusion: 
-# Comparison of the RMSE values shows us that GAM model has the lowest RMSE value.
+# Conclusion: # At first run, the values were like rmse.gam < rmse.krige < rmse.idw
+# But when I run the code several times, sometimes RMSE value of Ordinary Kriging model is bigger than IDW model.
+# However, comparison of the RMSE values always shows that GAM model has the lowest RMSE value.
 # This means when we use GAM, we can fit the data the best out of the three spatial smoothing models.
-# Second best model is Ordinary Kriging model and the last one is IDW model.
