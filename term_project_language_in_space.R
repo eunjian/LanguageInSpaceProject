@@ -1,13 +1,7 @@
-library(tmap)
-library(terra)
+library(sf)
+library(tidyverse)
 library(gstat)
 library(mgcv)
-library(tidyverse)
-library(sf)
-library(spdep)
-library(spatialreg)
-library(dplyr)
-library(modelr)
 
 # load the data
 pad_voronoi <- read_sf("pad_voronoi.shp")
@@ -62,6 +56,16 @@ pad.gam <- pad.krige %>%
   st_drop_geometry() %>%
   mutate(Z = gam.prediction) %>%
   select(X,Y,Z)
-# select(X, Y, Z) %>%
-# raster::rasterFromXYZ(crs=4326) %>%
-# as("SpatRaster")
+
+# calculate Root Mean Square Error(RMSE) from three different models
+rmse.idw <- sqrt(mean((pad_test$r - pad.idw$var1.pred)^2))
+rmse.krige <- sqrt(mean((pad_test$r - pad.krige$var1.pred)^2))
+rmse.gam <- sqrt(mean((pad_test$r - pad.gam$Z)^2))
+# compare the RMSE values of each model
+sort(c(rmse.gam, rmse.idw, rmse.krige)) # rmse.gam < rmse.krige < rmse.idw
+
+###
+# Conclusion: 
+# Comparison of the RMSE values shows us that GAM model has the lowest RMSE value.
+# This means when we use GAM, we can fit the data the best out of the three spatial smoothing models.
+# Second best model is Ordinary Kriging model and the last one is IDW model.
